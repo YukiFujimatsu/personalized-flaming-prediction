@@ -1,29 +1,49 @@
 # Personalized Real-time Flaming Risk Prediction
 
-IIAI AAI 2025 Winterに採録された、文章の炎上リスクをリアルタイムで予測する手法の実装です。
+IIAI AAI 2025 Winterに採録された、文章の炎上リスクをリアルタイムで予測する手法の実装およびデモプロトタイプです。
 
 ## 🌟 プロジェクト概要
 SNS等における「炎上」や「不快感」の基準は、人それぞれの価値観によって異なります。本プロジェクトでは、判定基準となるデータセットを入れ替えるだけで、ユーザー個人の基準に最適化したリスク判定をリアルタイムで行うモデルを提案しました。
 
 ## 🚀 特徴
-- **パーソナライズ判定**: 固定の学習モデルではなく、比較対象のデータ（Safe/Out）を差し替えることで、個別の基準に対応可能です。
-- **BERT + Mean Pooling**: BERTの最終層から得られるトークン埋め込みを平均化し、文全体の高精度なベクトル（分散表現）を抽出します。
-- **高速な類似度判定**: コサイン類似度を用いたk-NN的なアプローチにより、未知の文章に対してリアルタイムでのリスク算出を実現します。
+- **パーソナライズ判定**: 比較対象となるデータセット（Safe/Out）を差し替えるだけで、個別の価値観に基づいた判定が可能です。
+- **BERT + Mean Pooling**: BERTから得られる分散表現をMean Poolingで圧縮し、文全体の意味を捉えた高精度なベクトルを抽出します。
+- **確信度の算出**: 単なる類似度比較に留まらず、ロジスティック回帰を用いて「何%の確率でリスクがあるか」という信頼度を算出します。
+- **インタラクティブ・デモ**: Gradioを用いたWeb UIにより、未知の文章に対するリスク判定をブラウザ上で即座に体験できます。
 
 ## 📂 ディレクトリ構成
-- `01_data_preprocessing.ipynb`: テキストデータのクレンジングと、BERTによるベクトル化（特徴量抽出）を行います。
-- `02_model_evaluation.ipynb`: 抽出したベクトルを用いて、コサイン類似度に基づいた成功率（精度）の計算と評価を行います。
+```text
+├── notebooks/
+│   ├── 01_preprocessing.ipynb      # テキストのクレンジングと整形
+│   ├── 02_evaluation.ipynb         # 基本的な成功率（精度）の検証
+│   ├── 03_vector_caching.ipynb     # 推論高速化のためのベクトル事前計算と保存(Pickle)
+│   ├── 04_confidence_modeling.ipynb # 類似度を確率（信頼度）に変換するモデルの構築
+│   └── 05_gradio_app.ipynb         # Gradioを用いたリアルタイムデモ実行
+└── README.md
+```
 
 ## 🛠 技術スタック
 - **Language**: Python 3.x
-- **Library**: PyTorch, Hugging Face Transformers, Scikit-learn, Pandas, Matplotlib
-- **Model**: `bert-base-uncased` (BERT)
+- **Deep Learning**: PyTorch, Hugging Face Transformers (BERT)
+- **Web Interface**: Gradio
+- **Data Analysis**: Pandas, NumPy, Scikit-learn
+- **Visualization**: Matplotlib
+- **Other Tools**: deep_translator (翻訳API), tqdm (進捗管理), pickle (データ永続化)
 
 ## 📈 実績
 - **IIAI AAI 2025 Winter Full Paper Accepted**
-- 実験データにおける高い分類精度を達成（詳細はノートブック内の評価結果を参照）。
+- **リアルタイム性の確保**: 事前ベクトル計算とバッチ処理の最適化により、実用的なレスポンス速度を実現。
+- **高精度な信頼度スコア**: 類似度だけでなく、ロジスティック回帰を組み合わせた確率算出ロジックを独自に実装。
 
 ## 📖 使い方
-1. `data/` フォルダに判定基準としたいCSVファイルを配置します。
-2. `01_data_preprocessing.ipynb` を実行し、データをクレンジング・ベクトル化します。
-3. `02_model_evaluation.ipynb` を実行することで、精度の検証とリスク予測が実行されます。
+
+### 1. 研究成果の検証（精度評価）
+研究論文で提案した手法の再現手順です。
+1. `notebooks/01_preprocessing.ipynb` を実行し、学習・テストデータのクレンジングを行います。
+2. `notebooks/02_evaluation.ipynb` を実行し、コサイン類似度に基づいた分類成功率を確認します。
+
+### 2. インタラクティブ・デモの実行（プロトタイプ）
+Web UI上で実際にテキストを入力してリスク判定を行う手順です。
+1. `notebooks/03_vector_caching.ipynb` を実行し、参照用データセットを高速読み込み用の `pickle` 形式で保存します。
+2. `notebooks/04_confidence_modeling.ipynb` を実行し、類似度から「炎上確率（信頼度）」を導出するための学習モデルを作成します。
+3. `notebooks/05_gradio_app.ipynb` を実行するとブラウザ上にUIが起動します。任意の英語（または自動翻訳経由の日本語）を入力して、リアルタイム判定を体験してください。
