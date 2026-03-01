@@ -47,3 +47,12 @@ Web UI上で実際にテキストを入力してリスク判定を行う手順�
 1. `notebooks/03_vector_caching.ipynb` を実行し、参照用データセットを高速読み込み用の `pickle` 形式で保存します。
 2. `notebooks/04_confidence_modeling.ipynb` を実行し、類似度から「炎上確率（信頼度）」を導出するための学習モデルを作成します。
 3. `notebooks/05_gradio_app.ipynb` を実行するとブラウザ上にUIが起動します。任意の英語（または自動翻訳経由の日本語）を入力して、リアルタイム判定を体験してください。
+
+## 📊 データセットについて
+本プロジェクトでは、モデルの学習および検証に以下の公開データセットを利用しています。
+
+- **Dataset**: [Jigsaw Toxic Comment Classification Challenge](https://www.kaggle.com/datasets/julian3833/jigsaw-toxic-comment-classification-challenge)
+- **概要**: Wikipediaのコメント欄における有害性（Toxic, Severe Toxic, Obscene, Threat, Insult, Identity Hate）を分類するための大規模データセットです。
+
+本手法では、このデータセットを「個人の価値観（Safe/Out）」という観点で再定義・サンプリングし、パーソナライズド・モデルの構築に活用しています。
+※ライセンス遵守のため、本リポジトリにデータセット自体は同梱していません。上記リンクより取得してください。
